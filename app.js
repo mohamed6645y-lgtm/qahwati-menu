@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// إعدادات مشروعك qahwati-menu
+// إعدادات Firebase الخاصة بمشروعك qahwati-menu
 const firebaseConfig = {
   apiKey: "AIzaSyAqzmVaomFwvsyEN4Y4l9kOVEpw3NWjb5Y",
   authDomain: "qahwati-menu.firebaseapp.com",
@@ -13,14 +13,15 @@ const firebaseConfig = {
   measurementId: "G-VRKM8C2K0G"
 };
 
+// تهيئة Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// إضافة واجهة الإدارة برمجياً
+// إضافة واجهة الإدارة برمجياً (Toolbar + Login Modal)
 document.body.insertAdjacentHTML('afterbegin', `
     <div id="admin-toolbar" class="admin-toolbar hidden">
-        <span class="admin-status">● وضع التعديل نشط (اضغط على أي نص لتغييره)</span>
+        <span class="admin-status">🟢 وضع التعديل نشط (اضغط على الاسم أو السعر للتعديل)</span>
         <div class="admin-btns">
             <button id="save-btn" class="btn-primary">حفظ جميع التعديلات</button>
             <button id="logout-btn" class="btn-secondary">تسجيل خروج</button>
@@ -38,11 +39,16 @@ document.body.insertAdjacentHTML('afterbegin', `
     </div>
 `);
 
-// دالة تفعيل التعديل على العناصر
+/**
+ * دالة للتحكم في وضع التعديل
+ * @param {boolean} isAdmin - حالة المستخدم (مسجل دخول أم لا)
+ */
 function toggleEditMode(isAdmin) {
     const fields = document.querySelectorAll('.item-name, .item-desc, .price');
     fields.forEach(field => {
+        // لا يمكن التعديل إلا إذا كان isAdmin يساوي true
         field.contentEditable = isAdmin;
+        
         if (isAdmin) {
             field.style.borderBottom = "1px dashed #d4a373";
             field.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
@@ -51,82 +57,142 @@ function toggleEditMode(isAdmin) {
             field.style.backgroundColor = "transparent";
         }
     });
-    document.getElementById('admin-toolbar').classList.toggle('hidden', !isAdmin);
-    document.querySelectorAll('.add-item-btn').forEach(btn => btn.classList.toggle('hidden', !isAdmin));
+
+    // إظهار أو إخفاء شريط الإدارة وأزرار الإضافة بناءً على حالة الدخول
+    const toolbar = document.getElementById('admin-toolbar');
+    if (toolbar) toolbar.classList.toggle('hidden', !isAdmin);
+    
+    document.querySelectorAll('.add-item-btn').forEach(btn => {
+        btn.classList.toggle('hidden', !isAdmin);
+    });
 }
 
-// تحميل البيانات من السيرفر
-async function loadMenu() {
+/**
+ * دالة لجلب البيانات من Firestore وتحديث المنيو
+ */
+async function syncMenuWithFirebase() {
     try {
         const querySnapshot = await getDocs(collection(db, "menu"));
-        if (querySnapshot.empty) return;
-
-        querySnapshot.forEach((docSnap) => {
-            const catId = docSnap.id;
-            const items = docSnap.data().items;
-            const container = document.querySelector(`#${catId} .items-container`);
-            
-            if (container && items.length > 0) {
-                container.innerHTML = items.map(item => `
-                    <div class="menu-card">
-                        <div class="card-info">
-                            <h3 class="item-name">${item.name}</h3>
-                            <p class="item-desc">${item.desc}</p>
+        
+        // إذا كانت قاعدة البيانات تحتوي على بيانات، قم بتحديث الـ HTML
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach((docSnap) => {
+                const catId = docSnap.id;
+                const items = docSnap.data().items;
+                const container = document.querySelector(`#${catId} .items-container`);
+                
+                if (container && items && items.length > 0) {
+                    container.innerHTML = items.map(item => `
+                        <div class="menu-card">
+                            <div class="card-info">
+                                <h3 class="item-name">${item.name}</h3>
+                                <p class="item-desc">${item.desc}</p>
+                            </div>
+                            <div class="card-price">
+                                <span class="price">${item.price}</span>
+                                <span class="currency">سعر</span>
+                            </div>
                         </div>
-                        <div class="card-price">
-                            <span class="price">${item.price}</span>
-                            <span class="currency">سعر</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        });
-        if (auth.currentUser) toggleEditMode(true);
-    } catch (e) { console.error("Error loading menu:", e); }
+                    `).join('');
+                }
+            });
+        }
+        
+        // بعد جلب البيانات، تأكد من وضع التعديل بناءً على حالة المستخدم الحالي
+        toggleEditMode(!!auth.currentUser);
+        
+    } catch (e) {
+        console.error("Firebase Sync Error: ", e);
+    }
 }
 
-// مراقبة الدخول والخروج
+// مراقبة حالة تسجيل الدخول (Firebase Auth Observer)
 onAuthStateChanged(auth, (user) => {
-    toggleEditMode(!!user);
-    loadMenu();
+    if (user) {
+        console.log("Logged in as Admin");
+        toggleEditMode(true);
+    } else {
+        console.log("Logged out / Guest mode");
+        toggleEditMode(false);
+    }
+    // في كل الحالات، نحمل البيانات من السيرفر
+    syncMenuWithFirebase();
 });
 
-// حفظ البيانات
+// وظيفة حفظ البيانات في Firestore
 document.getElementById('save-btn').onclick = async () => {
     const btn = document.getElementById('save-btn');
+    const originalText = btn.innerText;
     btn.innerText = "جاري الحفظ...";
+    btn.disabled = true;
+
     const categories = ['coffee', 'hot-drinks', 'cold-drinks', 'desserts'];
     
     try {
         for (const cat of categories) {
-            const container = document.querySelector(`#${cat} .items-container`);
+            const section = document.getElementById(cat);
+            if (!section) continue;
+
+            const container = section.querySelector('.items-container');
             const cards = container.querySelectorAll('.menu-card');
+            
             const items = Array.from(cards).map(card => ({
                 name: card.querySelector('.item-name').innerText,
                 desc: card.querySelector('.item-desc').innerText,
                 price: card.querySelector('.price').innerText
             }));
+
+            // حفظ كل قسم في وثيقة (Document) منفصلة داخل مجموعة (Collection) "menu"
             await setDoc(doc(db, "menu", cat), { items });
         }
-        alert("تم حفظ التعديلات بنجاح ✅");
-    } catch (e) { alert("حدث خطأ أثناء الحفظ!"); }
-    btn.innerText = "حفظ جميع التعديلات";
+        alert("تم حفظ التعديلات بنجاح! جميع الزوار سيرون الأسعار الجديدة الآن. ✅");
+    } catch (e) { 
+        console.error(e);
+        alert("حدث خطأ أثناء الحفظ! تأكد من إعدادات الـ Rules في Firebase.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
 };
 
-// الدخول والخروج
+// وظائف تسجيل الدخول
 document.getElementById('login-btn').onclick = () => {
     const email = document.getElementById('admin-email').value;
     const pass = document.getElementById('admin-pass').value;
-    signInWithEmailAndPassword(auth, email, pass).then(() => {
-        document.getElementById('login-modal').classList.add('hidden');
-    }).catch(() => alert("بيانات الدخول غير صحيحة"));
+
+    if (!email || !pass) {
+        alert("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+        return;
+    }
+
+    signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+            document.getElementById('login-modal').classList.add('hidden');
+        })
+        .catch((error) => {
+            console.error(error);
+            alert("فشل الدخول: تأكد من صحة البيانات أو تفعيل الـ Authentication");
+        });
 };
 
-document.getElementById('logout-btn').onclick = () => signOut(auth);
-document.getElementById('login-trigger').onclick = () => document.getElementById('login-modal').classList.remove('hidden');
-document.getElementById('close-modal').onclick = () => document.getElementById('login-modal').classList.add('hidden');
+// تسجيل الخروج
+document.getElementById('logout-btn').onclick = () => {
+    signOut(auth).then(() => {
+        alert("تم تسجيل الخروج");
+        window.location.reload(); // إعادة تحميل للتأكد من قفل وضع التعديل
+    });
+};
 
-// إضافة صنف جديد
+// إظهار وإخفاء نافذة الدخول
+document.getElementById('login-trigger').onclick = () => {
+    document.getElementById('login-modal').classList.remove('hidden');
+};
+
+document.getElementById('close-modal').onclick = () => {
+    document.getElementById('login-modal').classList.add('hidden');
+};
+
+// وظيفة إضافة صنف جديد (تظهر للمالك فقط)
 document.querySelectorAll('.add-item-btn').forEach(btn => {
     btn.onclick = (e) => {
         const container = e.target.closest('section').querySelector('.items-container');
@@ -143,5 +209,10 @@ document.querySelectorAll('.add-item-btn').forEach(btn => {
             </div>
         `;
         container.appendChild(div);
+        
+        // تفعيل وضع التعديل فوراً للعنصر الجديد
+        div.querySelectorAll('[contenteditable]').forEach(el => {
+            el.style.borderBottom = "1px dashed #d4a373";
+        });
     };
 });
