@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة طعام قهوتي | Qahwati Menu</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="brand-name">قهوتي</h1>
+            <p class="tagline">مذاق الأصالة في كل رشفة</p>
+            <div class="divider">♦</div>
+        </div>
+    </header>
+
+    <nav class="category-nav">
+        <a href="#coffee">القهوة</a>
+        <a href="#hot-drinks">ساخنة</a>
+        <a href="#cold-drinks">باردة</a>
+        <a href="#desserts">حلى</a>
+    </nav>
+
+    <main class="menu-container">
+
+        <section id="coffee" class="menu-section" data-category="coffee">
+            <h2 class="section-title"><span>☕</span> القهوة المختصة</h2>
+            <div class="items-container">
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">اسبريسو</h3>
+                        <p class="item-desc">قهوة إيطالية مركزة وقوية</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">50</span>
+                        <span class="currency">سعر</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">قهوه تركي</h3>
+                        <p class="item-desc">"قهوة تركية كلاسيكية، تُحضر ببطء لضمان نكهة غنية ورغوة مثالية."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">60</span>
+                        <span class="currency">سعر</span>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn hidden">+ إضافة صنف جديد</button>
+        </section>
+
+        <section id="hot-drinks" class="menu-section" data-category="hot-drinks">
+            <h2 class="section-title"><span>🍵</span> مشروبات ساخنة</h2>
+            <div class="items-container">
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">شاي</h3>
+                        <p class="item-desc">"أوراق الشاي الفاخرة، مُحضّرة بعناية لتقديم لك المذاق المتوازن واللون العقيق الأصيل."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">15</span>
+                        <span class="currency">سعر</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">هوت شوكليت</h3>
+                        <p class="item-desc">"انغماس حقيقي في الشوكولاتة الغنية الممزوجة بالحليب الساخن، تُقدم بلمسة مخملية تمنحك الدفء والسعادة"</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">40</span>
+                        <span class="currency">سعر</span>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn hidden">+ إضافة صنف جديد</button>
+        </section>
+
+        <section id="cold-drinks" class="menu-section" data-category="cold-drinks">
+            <h2 class="section-title"><span>❄️</span> مشروبات باردة</h2>
+            <div class="items-container">
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">كوكتيل</h3>
+                        <p class="item-desc">"سيمفونية من الفواكه الطازجة المختارة بعناية، طعم يجمع بين الانتعاش والحلاوة الطبيعية في كل رشفة."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">40</span>
+                        <span class="currency">سعر</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">ايس شوكليت</h3>
+                        <p class="item-desc">"تجربة الشوكولاتة الفاخرة بحلتها الباردة؛ مزيج غني من الكاكاو والحليب مع قطع الثلج، لمذاق يجمع بين الحلاوة والانتعاش."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">60</span>
+                        <span class="currency">سعر.</span>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn hidden">+ إضافة صنف جديد</button>
+        </section>
+
+        <section id="desserts" class="menu-section" data-category="desserts">
+            <h2 class="section-title"><span>🍰</span> الحلويات</h2>
+            <div class="items-container">
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">شوكليت كيك</h3>
+                        <p class="item-desc">"قطعة من السعادة؛ كيكة شوكولاتة داكنة، غنية بطبقاتها الهشة والمذابة، تُقدم لتذوب في فمك مع كل قضمة."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">70</span>
+                        <span class="currency">.سعر</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">تشيز كيك</h3>
+                        <p class="item-desc">"طبقة غنية من الكريمة الناعمة والمخملية على قاعدة مقرمشة من البسكويت بالزبدة، لمذاق يوازن بين الحلاوة واللمسة الكريمية."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">90</span>
+                        <span class="currency">سعر.</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">مولتن كيك</h3>
+                        <p class="item-desc">"كيكة دافئة بقلب ينبض بالشوكولاتة السائلة، تنفجر بالنكهة مع أول قضمة لتمنحك تجربة غنية لا تُنسى."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">120</span>
+                        <span class="currency">سعر.</span>
+                    </div>
+                </div>
+                <div class="menu-card">
+                    <div class="card-info">
+                        <h3 class="item-name">انجلش كيك</h3>
+                        <p class="item-desc">"الكيكة التقليدية المخبوزة بعناية؛ قوام غني وهش بنكهة الزبدة الأصيلة، الرفيق الأمثل لكوب الشاي."</p>
+                    </div>
+                    <div class="card-price">
+                        <span class="price">90</span>
+                        <span class="currency">سعر.</span>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn hidden">+ إضافة صنف جديد</button>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; خبراء في صناعة القهوة</p>
+        <div class="social-links">
+            <span>Instagram</span> | <span>Snapchat</span>
+        </div>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+
+</body>
+</html>

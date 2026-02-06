@@ -1,0 +1,237 @@
+/* ========================================
+    CAFE MENU THEME VARIABLES
+    ========================================
+*/
+:root {
+    /* Colors - Dark Coffee Theme */
+    --bg-color: #1a1614;       /* Very Dark Espresso */
+    --card-bg: #2c241b;        /* Lighter Brown for Cards */
+    --text-primary: #f3e5d8;   /* Cream / Foam Color */
+    --text-secondary: #b0a090; /* Muted Beige */
+    --accent: #d4a373;         /* Gold / Caramel */
+    --border-color: #3e3228;   /* Subtle border */
+    
+    /* Spacing */
+    --padding-mobile: 1.5rem;
+    --border-radius: 12px;
+}
+
+/* ========================================
+    GLOBAL RESET & TYPOGRAPHY
+    ========================================
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* ========================================
+    HERO SECTION
+    ========================================
+*/
+.hero {
+    /* Create a dark atmospheric header */
+    background: linear-gradient(rgba(26, 22, 20, 0.7), var(--bg-color)), 
+                url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1000&q=80'); 
+    background-size: cover;
+    background-position: center;
+    height: 35vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    border-bottom: 2px solid var(--accent);
+}
+
+.hero-content {
+    animation: fadeIn 1.5s ease-out;
+}
+
+.brand-name {
+    font-size: 3.5rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    font-weight: 300;
+}
+
+.divider {
+    color: var(--accent);
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+    STICKY NAVIGATION
+    ========================================
+*/
+.category-nav {
+    background-color: rgba(44, 36, 27, 0.95);
+    backdrop-filter: blur(5px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.category-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.category-nav a:hover,
+.category-nav a:active {
+    background-color: var(--accent);
+    color: var(--bg-color);
+}
+
+/* ========================================
+    MENU CONTAINER & SECTIONS
+    ========================================
+*/
+.menu-container {
+    max-width: 600px; /* Limits width on desktop for mobile look */
+    margin: 0 auto;
+    padding: 2rem var(--padding-mobile);
+}
+
+.menu-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 80px; /* Offsets scroll for sticky nav */
+}
+
+.section-title {
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ========================================
+    MENU CARDS
+    ========================================
+*/
+.menu-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    border: 1px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(212, 163, 115, 0.3);
+}
+
+.card-info {
+    flex: 1;
+    margin-left: 1rem; /* Space between text and price in RTL */
+}
+
+.item-name {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+}
+
+.item-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.card-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 60px;
+}
+
+.price {
+    font-size: 1.2rem;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.currency {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+    FOOTER
+    ========================================
+*/
+.footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 2rem;
+}
+
+.social-links {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* ========================================
+    MEDIA QUERIES (Fine-tuning)
+    ========================================
+*/
+@media (max-width: 380px) {
+    .brand-name { font-size: 2.8rem; }
+    .item-name { font-size: 1rem; }
+}
